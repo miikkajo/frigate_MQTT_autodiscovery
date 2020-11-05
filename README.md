@@ -1,5 +1,7 @@
 # frigate_MQTT_autodiscovery
 script to generate MQTT discovery configuration for homeassistant
+
+
 run autodiscovery in same directory of config.yml
 
 script will listen for retained config messages
