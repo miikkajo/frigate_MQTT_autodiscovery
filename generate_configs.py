@@ -5,7 +5,7 @@ import paho.mqtt.client as mqtt
 import time
 
 FRIGATE_VARS = {k: v for k, v in os.environ.items() if k.startswith('FRIGATE_')}
-CONFIG_FILE = os.environ.get('CONFIG_FILE', './config/config.yml')
+CONFIG_FILE = os.environ.get('CONFIG_FILE', './config.yml')
 
 if CONFIG_FILE.endswith(".yml"):
     with open(CONFIG_FILE) as f:
