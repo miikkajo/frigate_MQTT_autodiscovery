@@ -5,6 +5,7 @@ import paho.mqtt.client as mqtt
 import time
 
 FRIGATE_VARS = {k: v for k, v in os.environ.items() if k.startswith('FRIGATE_')}
+
 CONFIG_FILE = os.environ.get('CONFIG_FILE', './config.yml')
 
 if CONFIG_FILE.endswith(".yml"):
@@ -39,8 +40,8 @@ def main():
     
     def on_message(client,userdata,msg):
         if msg.payload:
+            print (f"remove config: {msg.topic}")
             client.publish(topic=msg.topic,payload='',retain=True)
-        print (f"mesg: {msg.retain}")
 
     client = mqtt.Client(client_id=MQTT_CLIENT_ID)
     client.on_connect = on_connect
@@ -66,15 +67,13 @@ def main():
             # configure binary sensors
             config_topic = f"homeassistant/binary_sensor/{MQTT_TOPIC_PREFIX}/{camera}_{object}/config"
             message = f'{{"name":"{camera}_{object}_detected","state_topic": "{MQTT_TOPIC_PREFIX}/{camera}/{object}","device_class":"motion","availability_topic":"{MQTT_TOPIC_PREFIX}/available"}}'
-            print(config_topic)
-            print(message)
+            print(f"generate config: {config_topic}")
             ret = client.publish(topic=config_topic,payload=message,retain=True)
             
             # configure camera entities for snapshots
             config_topic = f"homeassistant/camera/{MQTT_TOPIC_PREFIX}/{camera}_{object}_snapshot/config"
             message = f'{{"name":"{camera}_{object}_snapshot","topic": "{MQTT_TOPIC_PREFIX}/{camera}/{object}/snapshot","availability_topic":"{MQTT_TOPIC_PREFIX}/available"}}'
-            print(config_topic)
-            print(message)
+            print(f"generate config: {config_topic}")
             ret = client.publish(topic=config_topic,payload=message,retain=True)
 
     client.disconnect()
